@@ -18,10 +18,26 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Jumping & velocity")]
     public float turnCalmTime = 0.1f;
     float turnCalmVelocity;
-
+    Vector3 velocity;
+    public Transform surfaceCheck;
+    bool onSurface;
+    public float surfaceDistance = 0.4f;
+    public LayerMask surfaceMask;
 
     void FixedUpdate()
     {
+        onSurface = Physics.CheckSphere(surfaceCheck.position, surfaceDistance,surfaceMask);
+       
+        if(onSurface && velocity.y < 0 )
+        {
+            velocity.y = -2f;
+        }
+
+        // gravity
+        velocity.y += gravity * Time.deltaTime;
+        characterController.Move(velocity * Time.deltaTime);
+
+
         PlayerMove();
     }
 
