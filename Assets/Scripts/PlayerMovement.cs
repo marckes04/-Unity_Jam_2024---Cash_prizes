@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Player Movement")]
-    public float playerSpeed = 1.9f;
+    public float walkSpeed = 1.9f;
+    public float sprintSpeed = 3f;
+    private float currentSpeed;
 
     [Header("Player Camera")]
     public Transform playerCamera;
@@ -15,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float gravity = -9.81f;
 
-    [Header("Player Jumping & velocity")]
+    [Header("Player Jumping & Velocity")]
     public float jumpRange = 1f;
     public float turnCalmTime = 0.1f;
     float turnCalmVelocity;
@@ -27,9 +29,9 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        onSurface = Physics.CheckSphere(surfaceCheck.position, surfaceDistance,surfaceMask);
-       
-        if(onSurface && velocity.y < 0 )
+        onSurface = Physics.CheckSphere(surfaceCheck.position, surfaceDistance, surfaceMask);
+
+        if (onSurface && velocity.y < 0)
         {
             velocity.y = -2f;
         }
@@ -38,9 +40,7 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
 
-
         PlayerMove();
-
         Jump();
     }
 
@@ -49,25 +49,29 @@ public class PlayerMovement : MonoBehaviour
         float horizontalAxis = Input.GetAxisRaw("Horizontal");
         float verticalAxis = Input.GetAxisRaw("Vertical");
 
-        Vector3 direction  = new Vector3(horizontalAxis,0f,verticalAxis).normalized;
+        Vector3 direction = new Vector3(horizontalAxis, 0f, verticalAxis).normalized;
 
-        if(direction.magnitude >= 0.1f)
+        if (direction.magnitude >= 0.1f)
         {
-            float targetAngle = Mathf.Atan2(direction.x,direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
+            // Determine if player is sprinting or walking
+            currentSpeed = (Input.GetButton("Sprint") && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))) ? sprintSpeed : walkSpeed;
+
+            // Rotation based on camera direction
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
-            
+
+            // Move the player
             Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            characterController.Move(moveDirection.normalized * playerSpeed * Time.deltaTime);
+            characterController.Move(moveDirection.normalized * currentSpeed * Time.deltaTime);
         }
     }
 
     void Jump()
     {
-        if(Input.GetButtonDown("Jump") && onSurface)
+        if (Input.GetButtonDown("Jump") && onSurface)
         {
             velocity.y = Mathf.Sqrt(jumpRange * -2 * gravity);
-
         }
     }
 }
