@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f;
 
     [Header("Player Jumping & velocity")]
+    public float jumpRange = 1f;
     public float turnCalmTime = 0.1f;
     float turnCalmVelocity;
     Vector3 velocity;
@@ -39,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
 
 
         PlayerMove();
+
+        Jump();
     }
 
     void PlayerMove()
@@ -56,6 +59,15 @@ public class PlayerMovement : MonoBehaviour
             
             Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
             characterController.Move(moveDirection.normalized * playerSpeed * Time.deltaTime);
+        }
+    }
+
+    void Jump()
+    {
+        if(Input.GetButtonDown("Jump") && onSurface)
+        {
+            velocity.y = Mathf.Sqrt(jumpRange * -2 * gravity);
+
         }
     }
 }
