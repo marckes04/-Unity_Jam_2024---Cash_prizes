@@ -21,9 +21,13 @@ public class Rifle : MonoBehaviour
     private bool setRealoding = false;
 
 
+    [Header("Rifle Effects")]
+    public GameObject muzzleSpark;
+
     private void Awake()
     {
         presentAmunition = maximunAmunition;
+        
     }
 
     void Update()
@@ -59,6 +63,12 @@ public class Rifle : MonoBehaviour
             animator.SetBool("Walk", true);
             animator.SetBool("Reloading", false);
         }
+        else if (Input.GetButtonUp("Fire1"))
+        {
+            muzzleSpark.SetActive(false);
+        }
+
+
         else
         {
             animator.SetBool("Fire", false);
@@ -69,30 +79,36 @@ public class Rifle : MonoBehaviour
 
     void Shoot()
     {
-        if (mag==0)
+        if (mag == 0)
         {
-            // show text
-
+            // show text indicating no ammo
+            return;
         }
 
         presentAmunition--;
 
-        if(presentAmunition == 0)
+        if (presentAmunition == 0)
         {
             mag--;
         }
 
+        // Trigger muzzle flash at the barrel of the rifle
+        muzzleSpark.SetActive(true);
+
         RaycastHit hitInfo;
-        if(Physics.Raycast(cam.transform.position,cam.transform.forward, out hitInfo, shootingRange))
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfo, shootingRange))
         {
             Debug.Log(hitInfo.transform.name);
             Objects objects = hitInfo.transform.GetComponent<Objects>();
 
-            if (objects != null) 
-            { 
+            if (objects != null)
+            {
                 objects.objectHitDamage(giveDamage);
             }
         }
+
+        // Stop the muzzle flash if needed, depending on how the Particle System is configured
+        // muzzleSpark.Stop(); // Optional: Only use if you need to manually stop the effect
     }
 
     IEnumerator Reload()
@@ -102,6 +118,7 @@ public class Rifle : MonoBehaviour
         setRealoding = true;
         Debug.Log("Reloading..");
         animator.SetBool("Reloading",true);
+        muzzleSpark.SetActive(false);
         yield return new WaitForSeconds(reloadingTime);
         // animations
         animator.SetBool("Reloading", false);
@@ -109,5 +126,6 @@ public class Rifle : MonoBehaviour
         player.playerSpeed = 1.9f;
         player.playerSprint = 3f;
         setRealoding = false;
+       
     }
 }
