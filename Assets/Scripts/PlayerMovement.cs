@@ -58,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontalAxis = Input.GetAxisRaw("Horizontal");
         float verticalAxis = Input.GetAxisRaw("Vertical");
 
+        // Create a movement direction vector based on input
         Vector3 direction = new Vector3(horizontalAxis, 0f, verticalAxis).normalized;
 
         if (direction.magnitude >= 0.1f)
@@ -67,16 +68,24 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Running", Input.GetButton("Sprint"));
             animator.SetBool("Idle", false);
 
-            // Determine if player is sprinting or walking
+            // Determine if the player is sprinting or walking
             currentPlayerSpeed = (Input.GetButton("Sprint") && (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.UpArrow))) ? playerSprint : playerSpeed;
 
-            // Calculate rotation based on camera direction
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + playerCamera.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnCalmVelocity, turnCalmTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            // Get the camera's forward direction, ignoring the y-axis
+            Vector3 cameraForward = new Vector3(playerCamera.forward.x, 0f, playerCamera.forward.z).normalized;
+            Vector3 cameraRight = new Vector3(playerCamera.right.x, 0f, playerCamera.right.z).normalized;
+
+            // Calculate movement direction relative to the camera
+            Vector3 moveDirection = cameraForward * verticalAxis + cameraRight * horizontalAxis;
+
+            // Only rotate the player to face the camera's forward direction when moving forward or backward
+            if (Mathf.Abs(verticalAxis) > 0.1f)
+            {
+                float targetAngle = Mathf.Atan2(cameraForward.x, cameraForward.z) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+            }
 
             // Move the player
-            Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
             characterController.Move(moveDirection.normalized * currentPlayerSpeed * Time.deltaTime);
         }
         else
@@ -87,6 +96,8 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Running", false);
         }
     }
+
+
 
     void Jump()
     {
