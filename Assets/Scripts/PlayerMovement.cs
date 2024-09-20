@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Ensure the Animator component is properly linked
         animator = GetComponent<Animator>();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void FixedUpdate()
@@ -96,4 +97,9 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = Mathf.Sqrt(jumpRange * -2 * gravity);
         }
     }
+
+
+    // Player Damage
+    //Player Die
+
 }
