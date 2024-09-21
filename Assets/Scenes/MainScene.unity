@@ -258,6 +258,68 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.66, y: 6.274411, z: 15.688026}
   m_Center: {x: -0.1, y: 2.75, z: 1.05}
+--- !u!1 &234117302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 234117303}
+  m_Layer: 7
+  m_Name: ShootingCastingRaycast
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &234117303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 234117302}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.289, z: 0.155}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7618068361060564208}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &315006942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 315006943}
+  m_Layer: 7
+  m_Name: ShootingRaycastArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &315006943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315006942}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.406, z: 0.186}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7852558334337827773}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &392103251
 GameObject:
   m_ObjectHideFlags: 0
@@ -23173,6 +23235,7 @@ Transform:
   - {fileID: 7618335096002751560}
   - {fileID: 7618348568289290810}
   - {fileID: 7618154008461654276}
+  - {fileID: 234117303}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &7618068361060564209
@@ -23209,12 +23272,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad17c5fb39167a43a1f06cce1a540e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  giveDamage: 5
   enemySpeed: 0
   enemyAgent: {fileID: 7618068361060564209}
+  Lookpoint: {fileID: 0}
+  shootingRaycastArea: {fileID: 234117302}
   playerBody: {fileID: 76848449}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  timebtwshoot: 0
   visionRadius: 100
   shootingRadius: 10
   playerInvisionRadius: 0
@@ -26099,6 +26166,7 @@ Transform:
   - {fileID: 7852564068704305331}
   - {fileID: 7847047005657491043}
   - {fileID: 7852205890122756059}
+  - {fileID: 315006943}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &7852560982056225819
@@ -27066,12 +27134,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fad17c5fb39167a43a1f06cce1a540e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  giveDamage: 5
   enemySpeed: 0
   enemyAgent: {fileID: 7907495443890514106}
+  Lookpoint: {fileID: 0}
+  shootingRaycastArea: {fileID: 315006942}
   playerBody: {fileID: 76848449}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  timebtwshoot: 0
   visionRadius: 100
   shootingRadius: 10
   playerInvisionRadius: 0
