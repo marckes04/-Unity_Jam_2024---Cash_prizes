@@ -23,6 +23,8 @@ public class Rifle : MonoBehaviour
 
     [Header("Rifle Effects")]
     public GameObject muzzleSpark;
+    public GameObject woodEffect; 
+
 
     private void Awake()
     {
@@ -104,6 +106,8 @@ public class Rifle : MonoBehaviour
             if (objects != null)
             {
                 objects.objectHitDamage(giveDamage);
+                GameObject woodGo = Instantiate(woodEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(woodGo, 1f);
             }
         }
 
