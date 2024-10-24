@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Player Health Things")]
+    private float playerHealth = 1000f;
+    private float presentHealth;
+
     [Header("Player Movement")]
     public float playerSpeed = 1.9f;
     public float currentPlayerSpeed = 0f;
@@ -32,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
         // Ensure the Animator component is properly linked
         animator = GetComponent<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
+        presentHealth = playerHealth;
     }
 
     void FixedUpdate()
@@ -111,6 +117,24 @@ public class PlayerMovement : MonoBehaviour
 
 
     // Player Damage
+    public void playerHitDamage(float takeDamage)
+    {
+        presentHealth -= takeDamage;
+
+        if (presentHealth <= 0)
+        {
+            PlayerDie();
+        }
+    }
+
+
+
+    private void PlayerDie()
+    {
+        Cursor.lockState = CursorLockMode.None;
+
+        Object.Destroy(gameObject);
+    }
     //Player Die
 
 }

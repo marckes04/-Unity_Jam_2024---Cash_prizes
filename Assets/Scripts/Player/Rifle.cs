@@ -23,7 +23,8 @@ public class Rifle : MonoBehaviour
 
     [Header("Rifle Effects")]
     public GameObject muzzleSpark;
-    public GameObject woodEffect; 
+    public GameObject woodEffect;
+    public GameObject goreEffect;
 
 
     private void Awake()
@@ -103,12 +104,22 @@ public class Rifle : MonoBehaviour
             Debug.Log(hitInfo.transform.name);
             Objects objects = hitInfo.transform.GetComponent<Objects>();
 
+            Enemy enemy = hitInfo.transform.GetComponent<Enemy>();
+
             if (objects != null)
             {
                 objects.objectHitDamage(giveDamage);
                 GameObject woodGo = Instantiate(woodEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(woodGo, 1f);
             }
+
+            else if (enemy != null) 
+            { 
+                enemy.enemyHitDamage(giveDamage);
+                GameObject goreGo = Instantiate(goreEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
+                Destroy(goreGo, 1f);
+            }
+
         }
 
         // Stop the muzzle flash if needed, depending on how the Particle System is configured

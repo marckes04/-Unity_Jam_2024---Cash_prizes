@@ -6,6 +6,8 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
     [Header("Enemy Health and Damage")]
+    private float enemyHealth = 120f;
+    private float presentHealth;
     public float giveDamage = 5f;
     public float enemySpeed;
 
@@ -15,6 +17,8 @@ public class Enemy : MonoBehaviour
     public GameObject shootingRaycastArea;
     public Transform playerBody;
     public LayerMask playerLayer;
+    public Transform spawn;
+    public Transform enemyCharacter;
 
 
     [Header("Enemy Shooting Var")]
@@ -26,11 +30,12 @@ public class Enemy : MonoBehaviour
     public float shootingRadius;
     public bool playerInvisionRadius;
     public bool playerInshootingRadius;
-    public bool iaPlayer = false;
+    public bool isPlayer = false;
 
     private void Awake()
     {
         enemyAgent = GetComponent<NavMeshAgent>();
+        presentHealth = enemyHealth;
     }
 
     private void Update()
@@ -65,6 +70,13 @@ public class Enemy : MonoBehaviour
             if(Physics.Raycast(shootingRaycastArea.transform.position, shootingRaycastArea.transform.forward, out hit,shootingRadius))
             {
                 Debug.Log("Shooting" + hit.transform.name);
+                
+                PlayerMovement playerBody = hit.transform.GetComponent<PlayerMovement>();
+
+                if (playerBody != null) 
+                {
+                    playerBody.playerHitDamage(giveDamage);
+                }
             }
         }
 
@@ -75,6 +87,47 @@ public class Enemy : MonoBehaviour
     private void ActiveShooting()
     {
         previouslyshoot = false;
+    }
+
+    public void enemyHitDamage(float takeDamage)
+    {
+        presentHealth -= takeDamage;
+
+        if (presentHealth <= 0)
+        {
+           StartCoroutine(Respawn());
+        }
+    }
+
+    IEnumerator Respawn()
+    {
+        enemyAgent.SetDestination(transform.position);
+        enemySpeed = 0f;
+        shootingRadius = 0f;
+        visionRadius = 0f;
+        playerInvisionRadius = false;
+        playerInshootingRadius = false;
+
+        // animations
+
+        Debug.Log("Dead");
+
+        yield return new WaitForSeconds(5f);
+
+        Debug.Log("Spawn");
+
+        presentHealth = 120f;
+        enemySpeed = 3f;
+        shootingRadius = 10f;
+        visionRadius = 100f;
+        playerInvisionRadius = true;
+        playerInshootingRadius = false;
+
+        // animations
+
+        //spawnpoints
+        enemyCharacter.transform.position = spawn.transform.position;
+        PursuePlayer();
     }
 
 }
