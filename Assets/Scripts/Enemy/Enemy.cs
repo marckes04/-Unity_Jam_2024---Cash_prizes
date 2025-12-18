@@ -1,133 +1,131 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
-    [Header("Enemy Health and Damage")]
-    private float enemyHealth = 120f;
-    private float presentHealth;
-    public float giveDamage = 5f;
-    public float enemySpeed;
+    [Header("Health Settings")]
+    [SerializeField] private float maxHealth = 120f;
+    private float currentHealth;
 
-    [Header("Enemy Things")]
-    public NavMeshAgent enemyAgent;
-    public Transform Lookpoint;
-    public GameObject shootingRaycastArea;
-    public Transform playerBody;
+    [Header("Combat Settings")]
+    public float damageDealt = 5f;
+    public float timeBetweenShots = 1.5f;
+    private bool canShoot = true;
+
+    [Header("Detection Settings")]
+    public float visionRadius = 20f;
+    public float shootingRadius = 10f;
     public LayerMask playerLayer;
-    public Transform spawn;
-    public Transform enemyCharacter;
 
-
-    [Header("Enemy Shooting Var")]
-    public float timebtwshoot;
-    bool previouslyshoot;
-
-    [Header("Enemy States")]
-    public float visionRadius;
-    public float shootingRadius;
-    public bool playerInvisionRadius;
-    public bool playerInshootingRadius;
-    public bool isPlayer = false;
+    [Header("References")]
+    public NavMeshAgent agent;
+    public Transform playerTransform;
+    public Transform shootingPoint;
+    public Transform spawnPoint;
 
     private void Awake()
     {
-        enemyAgent = GetComponent<NavMeshAgent>();
-        presentHealth = enemyHealth;
+        agent = GetComponent<NavMeshAgent>();
+        currentHealth = maxHealth;
+
+        // Auto-find player if not assigned via Tag
+        if (playerTransform == null)
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()
     {
-        playerInvisionRadius = Physics.CheckSphere(transform.position, visionRadius, playerLayer);
-        playerInshootingRadius = Physics.CheckSphere(transform.position, shootingRadius, playerLayer);
+        // 1. Check distances
+        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-        if(playerInvisionRadius && !playerInshootingRadius)
-        PursuePlayer();
-        if (playerInshootingRadius && playerInshootingRadius)
-            ShootPlayer();
+        // 2. State Logic
+        if (distanceToPlayer <= shootingRadius)
+        {
+            AttackState();
+        }
+        else if (distanceToPlayer <= visionRadius)
+        {
+            PursuePlayer();
+        }
+        else
+        {
+            StopMovement();
+        }
     }
 
     private void PursuePlayer()
     {
-        if(enemyAgent.SetDestination(playerBody.position))
+        // Update destination to player's current position
+        if (playerTransform != null)
         {
-            // animations
+            agent.isStopped = false;
+            agent.SetDestination(playerTransform.position);
+            // Trigger Run Animation here
         }
     }
 
-    private void ShootPlayer()
+    private void AttackState()
     {
-        enemyAgent.SetDestination(transform.position);
+        // Stop moving to shoot accurately
+        agent.isStopped = true;
 
-        transform.LookAt(Lookpoint);
+        // Always face the player
+        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
 
-        if (!previouslyshoot)
+        if (canShoot)
         {
-            RaycastHit hit;
+            Shoot();
+        }
+    }
 
-            if(Physics.Raycast(shootingRaycastArea.transform.position, shootingRaycastArea.transform.forward, out hit,shootingRadius))
+    private void Shoot()
+    {
+        canShoot = false;
+
+        RaycastHit hit;
+        if (Physics.Raycast(shootingPoint.position, shootingPoint.forward, out hit, shootingRadius))
+        {
+            if (hit.transform.TryGetComponent(out PlayerMovement player))
             {
-                Debug.Log("Shooting" + hit.transform.name);
-                
-                PlayerMovement playerBody = hit.transform.GetComponent<PlayerMovement>();
-
-                if (playerBody != null) 
-                {
-                    playerBody.playerHitDamage(giveDamage);
-                }
+                player.playerHitDamage(damageDealt);
+                Debug.Log("Hit Player!");
             }
         }
 
-        previouslyshoot = true;
-        Invoke(nameof(ActiveShooting), timebtwshoot);
+        Invoke(nameof(ResetShot), timeBetweenShots);
     }
 
-    private void ActiveShooting()
+    private void ResetShot() => canShoot = true;
+
+    private void StopMovement()
     {
-        previouslyshoot = false;
+        agent.isStopped = true;
+        // Trigger Idle Animation here
     }
 
-    public void enemyHitDamage(float takeDamage)
+    public void EnemyHitDamage(float amount)
     {
-        presentHealth -= takeDamage;
-
-        if (presentHealth <= 0)
-        {
-           StartCoroutine(Respawn());
-        }
+        currentHealth -= amount;
+        if (currentHealth <= 0) StartCoroutine(HandleDeath());
     }
 
-    IEnumerator Respawn()
+    IEnumerator HandleDeath()
     {
-        enemyAgent.SetDestination(transform.position);
-        enemySpeed = 0f;
-        shootingRadius = 0f;
-        visionRadius = 0f;
-        playerInvisionRadius = false;
-        playerInshootingRadius = false;
+        // Disable AI
+        agent.enabled = false;
+        this.enabled = false; // Stops Update()
 
-        // animations
-
-        Debug.Log("Dead");
-
+        Debug.Log("Enemy Down");
         yield return new WaitForSeconds(5f);
 
-        Debug.Log("Spawn");
-
-        presentHealth = 120f;
-        enemySpeed = 3f;
-        shootingRadius = 10f;
-        visionRadius = 100f;
-        playerInvisionRadius = true;
-        playerInshootingRadius = false;
-
-        // animations
-
-        //spawnpoints
-        enemyCharacter.transform.position = spawn.transform.position;
-        PursuePlayer();
+        // Respawn Logic
+        transform.position = spawnPoint.position;
+        currentHealth = maxHealth;
+        agent.enabled = true;
+        this.enabled = true;
     }
-
 }
