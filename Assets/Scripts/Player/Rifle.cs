@@ -115,7 +115,7 @@ public class Rifle : MonoBehaviour
 
             else if (enemy != null) 
             { 
-               // enemy.enemyHitDamage(giveDamage);
+               enemy.enemyHitDamage(giveDamage);
                 GameObject goreGo = Instantiate(goreEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
                 Destroy(goreGo, 1f);
             }
