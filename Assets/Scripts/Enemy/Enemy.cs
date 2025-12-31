@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour
         anim.SetBool("Running", false);
         anim.SetBool("Shooting", false);
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(8f);
         presentHealth = 120f;
         enemySpeed = 3f;
         shootingRadius = 10f;
