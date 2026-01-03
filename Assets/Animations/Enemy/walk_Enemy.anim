@@ -3865,6 +3865,23 @@ AnimationClip:
       m_RotationOrder: 4
     path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/Thumb_01_R/Thumb_02_R/Thumb_03_R/German
       AssaultRifle
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: {x: -4.587, y: -117.673, z: -101.856}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: {x: 0, y: 0.33333334, z: 0.33333334}
+        outWeight: {x: 0, y: 0.33333334, z: 0.33333334}
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
   m_PositionCurves:
   - curve:
       serializedVersion: 2
@@ -4151,6 +4168,23 @@ AnimationClip:
       m_RotationOrder: 4
     path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/Thumb_01_R/Thumb_02_R/Thumb_03_R/German
       AssaultRifle
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: {x: -0.17653178, y: -0.011378295, z: 0.16724789}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: {x: 0, y: 0.33333334, z: 0.33333334}
+        outWeight: {x: 0, y: 0.33333334, z: 0.33333334}
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
   m_ScaleCurves:
   - curve:
       serializedVersion: 2
@@ -4386,6 +4420,15 @@ AnimationClip:
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
       path: 1580736874
+      attribute: 1
+      script: {fileID: 0}
+      typeID: 4
+      customType: 0
+      isPPtrCurve: 0
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
+    - serializedVersion: 2
+      path: 2898673388
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -4692,6 +4735,15 @@ AnimationClip:
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
       path: 1580736874
+      attribute: 4
+      script: {fileID: 0}
+      typeID: 4
+      customType: 4
+      isPPtrCurve: 0
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
+    - serializedVersion: 2
+      path: 2898673388
       attribute: 4
       script: {fileID: 0}
       typeID: 4
@@ -22187,6 +22239,138 @@ AnimationClip:
     classID: 4
     script: {fileID: 0}
     flags: 16
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -0.17653178
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalPosition.x
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -0.011378295
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalPosition.y
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.16724789
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalPosition.z
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -4.587
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAnglesRaw.x
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 16
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -117.673
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAnglesRaw.y
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 16
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: -101.856
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: localEulerAnglesRaw.z
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 16
   m_EulerEditorCurves:
   - serializedVersion: 2
     curve:
@@ -34535,6 +34719,45 @@ AnimationClip:
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
     path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/Thumb_01_R/Thumb_02_R/Thumb_03_R/German
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
+      AssaultRifle
+    classID: 4
+    script: {fileID: 0}
+    flags: 0
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: Point_Root/Root/Pelvis/Spine_01/Spine_02/Spine_03/Neck_01/Clavicle_R/UpperArm_R/lowerarm_R/Hand_R/American
       AssaultRifle
     classID: 4
     script: {fileID: 0}
