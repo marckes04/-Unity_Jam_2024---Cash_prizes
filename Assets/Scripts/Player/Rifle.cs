@@ -4,143 +4,143 @@ using UnityEngine;
 
 public class Rifle : MonoBehaviour
 {
-    [Header("Rifle")]
+    [Header("Rifle Settings")]
     public Camera cam;
     public float giveDamage = 10f;
     public float shootingRange = 100f;
     public float fireCharge = 15f;
-    public PlayerMovement player;
+    public PlayerMovement player; // Asegúrate de que este script exista
     public Animator animator;
 
-    [Header("Rifle Animation and shooting")]
+    [Header("Ammo Settings")]
     private float nextTimeToShoot = 0f;
-    private int maximunAmunition = 20;
-    private int mag = 15;
-    private int presentAmunition;
+    [SerializeField] private int maximumAmmunition = 20;
+    [SerializeField] private int mag = 15; // Cantidad de cargadores
+    private int presentAmmunition;
     public float reloadingTime = 1.3f;
-    private bool setRealoding = false;
-
+    private bool isReloading = false;
 
     [Header("Rifle Effects")]
     public GameObject muzzleSpark;
     public GameObject woodEffect;
     public GameObject goreEffect;
 
-
     private void Awake()
     {
-        presentAmunition = maximunAmunition;
-        
+        presentAmmunition = maximumAmmunition;
     }
 
     void Update()
     {
-        if (setRealoding)
-            return;
+        if (isReloading) return;
 
-        if(presentAmunition <=0)
+        // Recarga automática si se acaba la munición
+        if (presentAmmunition <= 0 && mag > 0)
         {
             StartCoroutine(Reload());
             return;
         }
 
-        if(Input.GetButton("Fire1") && Time.time >=  nextTimeToShoot)
+        // Lógica de Disparo
+        if (Input.GetButton("Fire1") && Time.time >= nextTimeToShoot && presentAmmunition > 0)
         {
-            animator.SetBool("Fire", true);
-            animator.SetBool("Idle",false);
             nextTimeToShoot = Time.time + 1f / fireCharge;
             Shoot();
         }
-        else if(Input.GetButton("Fire1") && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-        {
-            animator.SetBool("Idle", false);
-            animator.SetBool("FireWalk",true);
-            
-        }
 
-        else if(Input.GetButton("Fire1") && Input.GetButton("Fire2"))
-        {
-            animator.SetBool("Idle", false);
-            animator.SetBool("IdleAim", true);
-            animator.SetBool("FireWalk", true);
-            animator.SetBool("Walk", true);
-            animator.SetBool("Reloading", false);
-        }
-        else if (Input.GetButtonUp("Fire1"))
+        // Control de Animaciones
+        UpdateAnimations();
+    }
+
+    private void UpdateAnimations()
+    {
+        bool isFiring = Input.GetButton("Fire1");
+        bool isWalking = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) ||
+                         Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+        bool isAiming = Input.GetButton("Fire2");
+
+        animator.SetBool("Fire", isFiring && presentAmmunition > 0);
+        animator.SetBool("Idle", !isFiring && !isWalking && !isAiming);
+        animator.SetBool("FireWalk", isFiring && isWalking);
+        animator.SetBool("IdleAim", isAiming);
+        animator.SetBool("Walk", isWalking && !isFiring);
+
+        // Desactivar flash si no se está disparando
+        if (Input.GetButtonUp("Fire1") || presentAmmunition <= 0)
         {
             muzzleSpark.SetActive(false);
-        }
-
-
-        else
-        {
-            animator.SetBool("Fire", false);
-            animator.SetBool("Idle", true);
-            animator.SetBool("FireWalk", false);
         }
     }
 
     void Shoot()
     {
-        if (mag == 0)
-        {
-            // show text indicating no ammo
-            return;
-        }
+        presentAmmunition--;
 
-        presentAmunition--;
-
-        if (presentAmunition == 0)
-        {
-            mag--;
-        }
-
-        // Trigger muzzle flash at the barrel of the rifle
-        muzzleSpark.SetActive(true);
+        // Activar efecto de disparo
+        if (muzzleSpark != null) muzzleSpark.SetActive(true);
 
         RaycastHit hitInfo;
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hitInfo, shootingRange))
         {
-            Debug.Log(hitInfo.transform.name);
+            Debug.Log("Impacto en: " + hitInfo.transform.name);
+
+            // 1. Impacto en Objetos
             Objects objects = hitInfo.transform.GetComponent<Objects>();
-
-            Enemy enemy = hitInfo.transform.GetComponent<Enemy>();
-
             if (objects != null)
             {
                 objects.objectHitDamage(giveDamage);
-                GameObject woodGo = Instantiate(woodEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(woodGo, 1f);
+                SpawnEffect(woodEffect, hitInfo);
+                return; // Salimos para no procesar el resto
             }
 
-            else if (enemy != null) 
-            { 
-               enemy.enemyHitDamage(giveDamage);
-                GameObject goreGo = Instantiate(goreEffect, hitInfo.point, Quaternion.LookRotation(hitInfo.normal));
-                Destroy(goreGo, 1f);
+            // 2. Impacto en IA (Usando el script único CharacterAI)
+            CharacterAI enemy = hitInfo.transform.GetComponent<CharacterAI>();
+            if (enemy != null)
+            {
+                // CORRECCIÓN: Llamamos al método de la instancia 'enemy', no de la clase
+                enemy.TakeDamage(giveDamage);
+                SpawnEffect(goreEffect, hitInfo);
             }
-
         }
+    }
 
-        // Stop the muzzle flash if needed, depending on how the Particle System is configured
-        // muzzleSpark.Stop(); // Optional: Only use if you need to manually stop the effect
+    // Método auxiliar para instanciar efectos
+    void SpawnEffect(GameObject effectPrefab, RaycastHit hit)
+    {
+        if (effectPrefab != null)
+        {
+            GameObject impactGo = Instantiate(effectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(impactGo, 1f);
+        }
     }
 
     IEnumerator Reload()
     {
-        player.playerSpeed = 0f;
-        player.playerSprint = 0f;
-        setRealoding = true;
-        Debug.Log("Reloading..");
-        animator.SetBool("Reloading",true);
+        isReloading = true;
+        mag--; // Consumir un cargador
+
+        // Detener al jugador si es necesario
+        if (player != null)
+        {
+            player.playerSpeed = 0f;
+            player.playerSprint = 0f;
+        }
+
+        animator.SetBool("Reloading", true);
         muzzleSpark.SetActive(false);
+
         yield return new WaitForSeconds(reloadingTime);
-        // animations
+
         animator.SetBool("Reloading", false);
-        presentAmunition = maximunAmunition;
-        player.playerSpeed = 1.9f;
-        player.playerSprint = 3f;
-        setRealoding = false;
-       
+        presentAmmunition = maximumAmmunition;
+
+        // Restaurar velocidad
+        if (player != null)
+        {
+            player.playerSpeed = 1.9f;
+            player.playerSprint = 3f;
+        }
+
+        isReloading = false;
     }
 }
